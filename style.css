@@ -28,6 +28,11 @@ body {
     margin-bottom: 20px;
 }
 
+.complete {
+    background: #008000;
+    opacity: 0.5;
+}
+
 .list {
     list-style: none;
     background: #08c8c8;
@@ -46,14 +51,20 @@ body {
 
 .list li:first-child {
     border-top: none;
+    border-radius: 10px 10px 0 0;
 }
 
 .list li:last-child {
     border-bottom: none;
+    border-radius: 0 0 10px 10px;
 }
 
 .list li>div>.list-title {
     font-weight: 700;
+}
+
+.list li div:first-child {
+    flex-grow: 1;
 }
 
 .list li div:last-child {

@@ -16,7 +16,7 @@ const description = document.getElementsByName("task-description")[0];
 function readItems() {
     let temp;
     if (data.length > 0) {
-            temp = data.map((item)=>{
+            temp = data.map((item, index)=>{
             // todo..
             // creating list item and its inner elements
             const li = document.createElement("li");
@@ -30,7 +30,7 @@ function readItems() {
             // event listener
             iconEdit.addEventListener("click", ()=>{updateItem(item)});
             iconDelete.addEventListener("click", ()=>{deleteItem(item)});
-            // div1.addEventListener("dblclick", ()=>{isComplete(item)});
+            div1.addEventListener("dblclick", ()=>{isComplete(item, index)});
     
             //adding text contents to p and i elements
             listTitle.textContent = item.title;
@@ -48,6 +48,11 @@ function readItems() {
             // div tags adding to li
             li.appendChild(div1);
             li.appendChild(div2);
+
+            if (item.flag) {
+                li.classList.add("complete"); 
+                iconEdit.style.visibility="hidden";
+            }
             
             return li;
         });
@@ -69,6 +74,21 @@ function readItems() {
     //done
 }
 
+// flag set to data 
+function isComplete(itm, i) {
+    const temp = itm.flag?false:true;
+    data[i]= {
+        ...itm,
+        flag: temp
+    }; 
+
+    localStorage.setItem("data",JSON.stringify(data));
+    data = JSON.parse(localStorage.getItem("data"));
+   
+    ul.replaceChildren(...readItems());
+    //done
+}
+
 // adding item to list
 function createItem() {
     if(title.value != "" && description.value != ""){
@@ -76,7 +96,8 @@ function createItem() {
         data.push({
             id: (data.length>0)?data[data.length - 1].id + 1: 101,
             title: title.value,
-            description: description.value
+            description: description.value,
+            flag: false
         })
     }
     
@@ -110,7 +131,8 @@ function update() {
     data[idx]= {
         id:gId,
         title: title.value,
-        description: description.value
+        description: description.value,
+        flag: false
     };  
 
     localStorage.setItem("data",JSON.stringify(data));
