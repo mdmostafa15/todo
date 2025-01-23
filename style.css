@@ -143,3 +143,20 @@ body {
     margin: 10px 0;
     border-radius: 5px;
 }
+
+.snackbar {
+    background: #00000061;
+    text-align: center;
+    height: 50px;
+    align-content: center;
+    width: 50%;
+    position: fixed;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%,-50%);
+    color: #000;
+    font-weight: 900;
+    font-size: 20px;
+    text-transform: capitalize;
+    bottom: 10%;
+}

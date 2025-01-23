@@ -13,6 +13,17 @@ const btn = document.getElementsByClassName("group-btn")[0].children;
 const title = document.getElementsByName("task-title")[0];
 const description = document.getElementsByName("task-description")[0];
 
+const snackbar = document.getElementsByClassName("snackbar")[0];
+
+function shwToast(msg) {
+    snackbar.classList.remove("hidden");
+    snackbar.textContent = msg;
+    setTimeout(()=>{
+        snackbar.classList.add("hidden");
+    },1500);
+}
+
+// add items to list using data
 function readItems() {
     let temp;
     if (data.length > 0) {
@@ -106,6 +117,7 @@ function createItem() {
     
     hideModal();
     ul.replaceChildren(...readItems());
+    shwToast("List Item is Inserted!!!");
     //done
 }
 
@@ -140,6 +152,7 @@ function update() {
     
     hideModal();
     ul.replaceChildren(...readItems());
+    shwToast("List Item is Updated!!!");
     //done
 }
 
@@ -153,6 +166,7 @@ function deleteItem(item) {
     data = JSON.parse(localStorage.getItem("data"));
     
     ul.replaceChildren(...readItems());
+    shwToast("List Item is Deleted!!!");
     //done
 }
 
