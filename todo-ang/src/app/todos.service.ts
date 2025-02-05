@@ -20,7 +20,7 @@ export class TodosService {
       },
       body: JSON.stringify(obj),
     })
-    console.log("Todo is inserted :) ", obj);
+    console.log("Todo is inserted :) ", res);
     
   }
 
@@ -34,7 +34,7 @@ export class TodosService {
       body: JSON.stringify(todo),
     })
 
-    console.log("Is completed res : ",res.ok);
+    console.log("Is completed res : ",res);
     
   }
 

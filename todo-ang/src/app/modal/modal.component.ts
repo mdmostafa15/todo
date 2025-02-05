@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, Input } from '@angular/core';
 import { TodosService } from '../todos.service';
 import { Todo } from '../todo';
 
@@ -12,7 +12,10 @@ import { Todo } from '../todo';
 
 export class ModalComponent {
   todos: Todo[] =[]
-  @Output() hide = new EventEmitter<void>();
+  @Input() itemTitle:string = "";
+  @Output() hideModalEvent = new EventEmitter<void>();
+  @Output() addTodoEvent = new EventEmitter<string>()
+  @Output() updateTodoEvent = new EventEmitter<string>();
   todoService = inject(TodosService);
 
   constructor () {
@@ -22,28 +25,19 @@ export class ModalComponent {
   }
   
 
-  hideModal () {
-    this.hide.emit();
-    console.log("hidden function called");
+  closeModal () {
+    this.hideModalEvent.emit();
   }
 
 
   addTodo (title: string) {
-    let len: number = this.todos.length;
-    if (title!=="") {
-      const obj: Todo = {
-        userId: Math.floor(Math.random() * 3) + 1,
-        id: 1 + this.todos[len - 1].id ,
-        title,
-        completed: false
-      }
-
-      this.todos.push(obj);
-      this.todoService.createTodo(obj);
-    }
-
+    this.addTodoEvent.emit(title);
     console.log("addTodo function is called!!!");
-    this.hideModal()
+  }
+
+  
+  updateTodo (item: string) {
+    this.updateTodoEvent.emit(item)
   }
 
 }

@@ -5,13 +5,17 @@
         </div>
         <div class="modal-body">
             <div class="group-input">
-                <input type="text" #title name="task-title" placeholder ="give a name!"><br>
+                <input type="text" #title name="task-title" placeholder ="give a name!" [value]="itemTitle"><br>
             </div>
         </div>
         <div class="modal-bottom">
             <div class="group-btn">
-                <input type="button" value="Add" (click)="addTodo(title.value)"> 
-                <input type="button" value="closs" (click)="hideModal()" >
+                @if (itemTitle !== '') {
+                    <input type="button" value="Update" (click)="updateTodo(title.value)"> 
+                } @else {
+                    <input type="button" value="Add Item" (click)="addTodo(title.value)">
+                }
+                <input type="button" value="Cencel" (click)="closeModal()" >
             </div>
         </div>
     </div>

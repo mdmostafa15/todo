@@ -11,10 +11,19 @@ import { ModalComponent } from "./modal/modal.component";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-
-  todos: Todo[] =[];
+  todos: Todo[] = [];
   todoService: TodosService = inject(TodosService);
   hidden: boolean = true;
+  todoTitle: string="";
+  idx!: number;
+  todo!: Todo;
+  snackBar: {
+    flag: boolean,
+    msg: string
+  } = {
+    flag: false,
+    msg: "",
+  }
 
   constructor() {
     this.todoService.getTodos().then((todos)=>{
@@ -23,15 +32,25 @@ export class AppComponent {
   }
 
 
-  // showing Modal
+  showSnack (msg: string) {
+    this.snackBar.flag=true;
+    this.snackBar.msg=msg;
+    setTimeout(()=>{
+      this.snackBar.flag=false;
+    },1000); 
+  }
+
+
   showModal() {
     this.hidden = false;
-    console.log("showModal function is called!! ");
+    this.showSnack("Modal is Showing!");
+      
   }
 
 
   hideModal() {
     this.hidden = true;
+    this.todoTitle="";
   }
 
 
@@ -44,7 +63,10 @@ export class AppComponent {
 
       this.todos![idx] = obj;
       this.todoService.updateTodo(obj);
-      console.log("is completed function is clicked!!! :) ");
+      if (!todo.completed)
+        this.showSnack("Task is Completed :) ");
+      else
+        this.showSnack("Task is Undo!");
     }
   }
 
@@ -53,18 +75,51 @@ export class AppComponent {
     const datum = this.todos?.splice(idx,1);
     if (datum.length) {
       this.todoService.deleteTodo(datum[0].id)
+      this.showSnack("Task is deleted!");
     }
   }
 
 
-  updateTodo (idx:number, todo:Todo) {
-    this.todos[idx] = {
-      ...todo,
-      title: "hello for updating"
+  updateTodo (modifiedTitle: string) {
+    if (modifiedTitle !== "") {
+      const obj = {
+        ...this.todo,
+        title: modifiedTitle,
+      }
+  
+      this.todos[this.idx] = obj;
+      this.todoService.updateTodo(obj);
+      this.showSnack("Task is updated!");
     }
-
-    console.log("Button is clicked for updating!!!");
+    this.hideModal();
   }
 
+
+  updateItemCall (idx:number, todo:Todo) {
+    this.idx = idx; 
+    this.todo = todo;
+    this.todoTitle=todo.title;
+    this.showModal();
+  }
+
+
+  createTodo (title: string) {
+    const len: number = this.todos.length;
+    if (title!=="") {
+      const id = Number(this.todos[len - 1].id) +1;
+      const obj: Todo = {
+        userId: Math.floor(Math.random() * 3) + 1,
+        id: id.toString(10),
+        title,
+        completed: false
+      }
+
+      this.todos.push(obj);
+      this.todoService.createTodo(obj);
+      this.showSnack("Task is inserted!!!");
+    }
+
+    this.hideModal();
+  }
   
 }

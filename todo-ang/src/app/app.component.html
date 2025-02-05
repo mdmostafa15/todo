@@ -1,11 +1,16 @@
 <div class="container">
 @if (!hidden) {
-  <app-modal (hide)="hideModal()"></app-modal>
+  <app-modal 
+  (hideModalEvent)="hideModal()" 
+  (addTodoEvent)="createTodo($event)"
+  (updateTodoEvent)="updateTodo($event)"
+  [itemTitle]="todoTitle"
+  ></app-modal>
 }
   <div class="title">
       <h2>list of shopping</h2>
   </div>
-  <button class="btn" (click)="showModal()" >Add Item To List</button>
+  <button class="btn" [class.hidden]="!hidden" (click)="showModal()" >Add Item To List</button>
 
   <div class="list-container">
     <ul class="list">
@@ -19,16 +24,26 @@
           
           <div>
             <i class="material-icons btn-edit" 
-            [class]="todo.completed?'hidden':''"
-            (click)="updateTodo($index, todo)">border_color</i>
+            [class.hidden]="todo.completed"
+            (click)="updateItemCall($index, todo)">border_color</i>
             
             <i class="material-icons btn-delete" 
             (click)="deleteTodo($index)">delete</i>
           </div>
         </li>
       }
+      @if (todos.length === 0) {
+        <li>
+          <div>
+            <p class="list-title">there is no item!!! Please, add shopping item</p>
+          </div>
+        </li>
+      }
     </ul>
   </div>
+  @if (snackBar.flag) {
+    <div class="snackbar" >{{snackBar.msg}}</div>
+  }
 </div>
-<div class="snackbar hidden">massage toast</div>
+
 
