@@ -1,0 +1,18 @@
+<div class="modal-container">
+    <div class="modal ">
+        <div class="modal-top">
+            <h3>Add Item to Shopping List</h3>
+        </div>
+        <div class="modal-body">
+            <div class="group-input">
+                <input type="text" #title name="task-title" placeholder ="give a name!"><br>
+            </div>
+        </div>
+        <div class="modal-bottom">
+            <div class="group-btn">
+                <input type="button" value="Add" (click)="addTodo(title.value)"> 
+                <input type="button" value="closs" (click)="hideModal()" >
+            </div>
+        </div>
+    </div>
+</div>

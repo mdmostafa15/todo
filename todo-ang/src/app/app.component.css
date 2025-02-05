@@ -1,0 +1,8 @@
+.complete {
+    background: #008000;
+    opacity: 0.5;
+}
+
+.hidden{
+    display: none;
+}
