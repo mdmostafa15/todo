@@ -3,6 +3,7 @@ import { MatIconModule} from '@angular/material/icon'
 import { Todo } from './todo';
 import { TodosService } from './todos.service';
 import { ModalComponent } from "./modal/modal.component";
+import { Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,12 +27,13 @@ export class AppComponent {
   }
 
   constructor() {
-    this.todoService.getTodos().then((todos)=>{
+    this.todoService.getTodos()
+    .subscribe((todos: Todo[])=>{
       this.todos = todos;
     }); 
   }
 
-
+// change function name
   showSnack (msg: string) {
     this.snackBar.flag=true;
     this.snackBar.msg=msg;
@@ -61,8 +63,11 @@ export class AppComponent {
         completed: !todo.completed
       }
 
-      this.todos![idx] = obj;
-      this.todoService.updateTodo(obj);
+      this.todos[idx] = obj;
+      this.todoService.updateTodo(obj).subscribe((response)=>{
+        console.log(response);
+        
+      });
       if (!todo.completed)
         this.showSnack("Task is Completed :) ");
       else
@@ -72,9 +77,11 @@ export class AppComponent {
 
   
   deleteTodo (idx: number) {
-    const datum = this.todos?.splice(idx,1);
+    const datum = this.todos.splice(idx,1);
     if (datum.length) {
-      this.todoService.deleteTodo(datum[0].id)
+      this.todoService.deleteTodo(datum[0].id).subscribe((response)=>{
+        console.log(response);
+      })
       this.showSnack("Task is deleted!");
     }
   }
@@ -88,7 +95,10 @@ export class AppComponent {
       }
   
       this.todos[this.idx] = obj;
-      this.todoService.updateTodo(obj);
+      this.todoService.updateTodo(obj).subscribe((response)=>{
+        console.log(response);
+        
+      });
       this.showSnack("Task is updated!");
     }
     this.hideModal();
@@ -115,10 +125,11 @@ export class AppComponent {
       }
 
       this.todos.push(obj);
-      this.todoService.createTodo(obj);
+      this.todoService.createTodo(obj).subscribe((response)=>{
+        console.log(response);
+      });
       this.showSnack("Task is inserted!!!");
     }
-
     this.hideModal();
   }
   

@@ -1,49 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Todo } from './todo';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodosService {
-  url = "http://localhost:3000/todos";
+  private url = "http://localhost:3000/todos";
 
-  async getTodos(): Promise<Todo[]>{
-    const data = await fetch(this.url);
-    return (await data.json());
+  constructor(private http: HttpClient) {
+
   }
 
-  async createTodo (obj: Todo) {
-    const res = await fetch(`${this.url}`,{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj),
-    })
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.url)
+  }
+
+  createTodo (obj: Todo) {
+    const res = this.http.post<Todo>(`${this.url}`, JSON.stringify(obj))
     console.log("Todo is inserted :) ", res);
-    
+    return res;
   }
 
 
-  async updateTodo (todo: Todo) {
-    const res = await fetch(`${this.url}/${todo.id}`,{
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(todo),
-    })
-
+  updateTodo (todo: Todo) {
+    const res = this.http.put<Todo>(`${this.url}/${todo.id}`, JSON.stringify(todo))
     console.log("Is completed res : ",res);
-    
+    return res;
   }
 
 
-  async deleteTodo (id: string) {
-    const res = await fetch(`${this.url}/${id}`,{
-      method: "DELETE"
-    })
+  deleteTodo (id: string) {
+    const res = this.http.delete<string>(`${this.url}/${id}`)
     console.log("todo is deleted : ",res);
+    return res;
   }
 
 }

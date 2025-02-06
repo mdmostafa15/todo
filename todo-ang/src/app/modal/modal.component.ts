@@ -11,17 +11,12 @@ import { Todo } from '../todo';
 })
 
 export class ModalComponent {
-  todos: Todo[] =[]
   @Input() itemTitle:string = "";
   @Output() hideModalEvent = new EventEmitter<void>();
   @Output() addTodoEvent = new EventEmitter<string>()
   @Output() updateTodoEvent = new EventEmitter<string>();
-  todoService = inject(TodosService);
-
+ 
   constructor () {
-    this.todoService.getTodos().then((todos)=>{
-      this.todos = todos;
-    }); 
   }
   
 
