@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { MatIconModule} from '@angular/material/icon'
+import { MatIconModule} from '@angular/material/icon';
 import { Todo } from './todo';
 import { TodosService } from './todos.service';
 import { ModalComponent } from "./modal/modal.component";
-import { Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -33,8 +32,8 @@ export class AppComponent {
     }); 
   }
 
-// change function name
-  showSnack (msg: string) {
+
+  showTost (msg: string) {
     this.snackBar.flag=true;
     this.snackBar.msg=msg;
     setTimeout(()=>{
@@ -45,7 +44,7 @@ export class AppComponent {
 
   showModal() {
     this.hidden = false;
-    this.showSnack("Modal is Showing!");
+    this.showTost("Modal is Showing!");
       
   }
 
@@ -62,28 +61,22 @@ export class AppComponent {
         ...todo,
         completed: !todo.completed
       }
-
-      this.todos[idx] = obj;
       this.todoService.updateTodo(obj).subscribe((response)=>{
-        console.log(response);
-        
+        this.todos[idx]=response;
       });
       if (!todo.completed)
-        this.showSnack("Task is Completed :) ");
+        this.showTost("Task is Completed :) ");
       else
-        this.showSnack("Task is Undo!");
+        this.showTost("Task is Undo!");
     }
   }
 
   
-  deleteTodo (idx: number) {
-    const datum = this.todos.splice(idx,1);
-    if (datum.length) {
-      this.todoService.deleteTodo(datum[0].id).subscribe((response)=>{
-        console.log(response);
+  deleteTodo (index: number) {
+      this.todoService.deleteTodo(this.todos[index].id).subscribe((response)=>{
+        console.log(response && this.todos.splice(index,1));
       })
-      this.showSnack("Task is deleted!");
-    }
+      this.showTost("Task is deleted!");
   }
 
 
@@ -93,19 +86,16 @@ export class AppComponent {
         ...this.todo,
         title: modifiedTitle,
       }
-  
-      this.todos[this.idx] = obj;
       this.todoService.updateTodo(obj).subscribe((response)=>{
-        console.log(response);
-        
+        this.todos[this.idx]=response;
       });
-      this.showSnack("Task is updated!");
+      this.showTost("Task is updated!");
     }
     this.hideModal();
   }
 
 
-  updateItemCall (idx:number, todo:Todo) {
+  itemUpdateCall (idx:number, todo:Todo) {
     this.idx = idx; 
     this.todo = todo;
     this.todoTitle=todo.title;
@@ -114,21 +104,19 @@ export class AppComponent {
 
 
   createTodo (title: string) {
-    const len: number = this.todos.length;
     if (title!=="") {
-      const id = Number(this.todos[len - 1].id) +1;
+      const id = Number(this.todos[this.todos.length - 1].id) +1;
       const obj: Todo = {
         userId: Math.floor(Math.random() * 3) + 1,
         id: id.toString(10),
         title,
         completed: false
       }
-
-      this.todos.push(obj);
+      
       this.todoService.createTodo(obj).subscribe((response)=>{
-        console.log(response);
+        this.todos.push(response);
       });
-      this.showSnack("Task is inserted!!!");
+      this.showTost("Task is inserted!!!");
     }
     this.hideModal();
   }
